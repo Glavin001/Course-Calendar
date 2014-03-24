@@ -81,7 +81,27 @@ var valueForField = function(key, val) {
         return parseInt(val);
     }
     else if (key === "days") {
-        return val.split('');
+        var s = val.split('');
+        var dayFromDayStr = function(str) {
+            //console.log(str);
+            var day = "";
+            if (str === 'M') // Monday
+                day = "MO";
+            if (str === 'T') // Tuesday
+                day = "TU";
+            if (str === 'W') // Wed
+                day = "WE";
+            if (str === 'R') // Thursday
+                day = "TH";
+            if (str === 'F') // Friday
+                day = "FR";
+            if (str === 'S') // Saturday
+                day = "SA"
+            if (str === 'SU') // Sunday
+                day = "SU";
+            return day;
+        };
+        return s.map(dayFromDayStr);
     }
     else if (key === "room") {
         return parseInt(val);
