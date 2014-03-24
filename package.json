@@ -1,0 +1,25 @@
+{
+  "name": "Course-Calendar",
+  "version": "0.1.0",
+  "description": "Service that serves iCal files from user's selected courses.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SMU-CS-and-Math-Society/Course-Calendar.git"
+  },
+  "author": "Glavin Wiechert <glavin.wiechert@gmail.com> (https://github.com/Glavin001)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SMU-CS-and-Math-Society/Course-Calendar/issues"
+  },
+  "homepage": "https://github.com/SMU-CS-and-Math-Society/Course-Calendar",
+  "dependencies": {
+    "csv": "^0.3.7",
+    "nconf": "^0.6.9",
+    "express": "^3.5.0",
+    "commander": "^2.1.0"
+  }
+}

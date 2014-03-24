@@ -1,3 +1,7 @@
+# Bower
+bower_components
+
+# Node
 lib-cov
 *.seed
 *.log

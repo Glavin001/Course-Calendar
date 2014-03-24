@@ -1,0 +1,18 @@
+{
+  "name": "Course-Calendar",
+  "version": "0.0.0",
+  "homepage": "https://github.com/SMU-CS-and-Math-Society/Course-Calendar",
+  "authors": [
+    "Glavin Wiechert <glavin.wiechert@gmail.com>"
+  ],
+  "description": "Service that serves iCal files from user's selected courses.",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
