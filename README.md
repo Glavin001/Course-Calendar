@@ -15,6 +15,7 @@ npm install
 bower install
 # Database
 node utils/coursesCSV2JSON.js -i data/courses.csv -o data/output.json
+# Drop 'smu' and import
 mongo smu --eval "db.dropDatabase()"
 mongoimport --db smu -c courses --jsonArray < data/output.json
 # Start app
@@ -36,8 +37,16 @@ bower install
 
 ### Import the course data
 
+Convert the CSV data to JSON format using utils/coursesCSV2JSON.js
 ```bash
-mongoimport --db smu -c courses data/coursesExport.json
+node utils/coursesCSV2JSON.js -i data/courses.csv -o data/output.json
+```
+Import newly formated data to MongoDB. WARNING: this will drop any existing `smu` database!
+```bash
+# Drop 'smu'
+mongo smu --eval "db.dropDatabase()"
+# Import data to 'courses' collection in 'smu' database
+mongoimport --db smu --collection courses --jsonArray < data/output.json
 ```
 
 If successful, the console will display:
@@ -61,7 +70,7 @@ node utils/coursesCSV2JSON.js -i data/courses.csv -o data/output.json --pretty
 #### Importing from JSON output file
 
 ```bash
-mongoimport --db smu -c courses --jsonArray < data/output.json
+mongoimport --db smu --collection courses --jsonArray < data/output.json
 ```
 
  > Note: Be sure to clear your collection `courses` in database `smu` before importing, as this will insert duplicates.
