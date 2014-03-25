@@ -53,6 +53,13 @@ var valueForField = function(key, val) {
     else if (key === "CRN") {
         return parseInt(val);
     }
+    else if (key === "course") {
+        var d = {};
+        var s = val.split('.');
+        d['id'] = parseInt(s[0]);
+        d['lab'] = s[1];
+        return d;
+    }
     else if (key === "credit value") {
         return parseFloat(val);
     }
@@ -63,10 +70,10 @@ var valueForField = function(key, val) {
         return parseInt(val);
     }
     else if (key === "start date") {
-        return new Date(val);
+        return { "$date": new Date(val).getTime() };
     }
     else if (key === "end date") {
-        return new Date(val);
+        return { "$date": new Date(val).getTime() };
     }
     else if (key === "start time") {
         var n = parseInt(val);
@@ -78,7 +85,13 @@ var valueForField = function(key, val) {
         };
     }
     else if (key === "end time") {
-        return parseInt(val);
+        var n = parseInt(val);
+        var hours = parseInt(n/100);
+        var minutes = n - hours*100;
+        return {
+            "hour": hours,
+            "minute": minutes
+        };
     }
     else if (key === "days") {
         var s = val.split('');

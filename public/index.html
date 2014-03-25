@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Course Calendar</title>
+
+    <!-- Bootstrap -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- NVD3 -->
+    <link href="bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Styles -->
+    <style>
+        #charts {
+            height: 100%;
+            overflow: visible;
+        }
+        #charts svg {
+            height: 500px;
+        }
+    </style>
+
+  </head>
+  <body>
+    
+    <div class="container">
+        
+        <div class="jumbotron">
+          <h1>Welcome to Course Calendar</h1>
+          <p>MongoDB + Node.js + Express + D3</p>
+          <p><a class="btn btn-primary btn-lg" role="button" href="https://github.com/SMU-CS-and-Math-Society/Course-Calendar" target="_blank">Learn more</a></p>
+        </div>
+        
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+          <li><a href="#profile" data-toggle="tab">Profile</a></li>
+          <li><a href="#messages" data-toggle="tab">Messages</a></li>
+          <li><a href="#settings" data-toggle="tab">Settings</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div id="charts" class="tab-content">
+          <div class="tab-pane active fade in" id="home">
+              <svg id="stats1" class=""></svg>
+          </div>
+          <div class="tab-pane fade" id="profile">
+              <svg id="stats2" class=""></svg>
+          </div>
+          <div class="tab-pane fade" id="messages">
+              <svg id="stats3" class=""></svg>
+          </div>
+          <div class="tab-pane fade" id="settings">
+              <svg id="stats4" class=""></svg>
+          </div>
+        </div>
+
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScripts -->
+    <script src="bower_components/d3/d3.min.js"></script>
+    <script src="bower_components/nvd3/nv.d3.min.js"></script>
+    <script src="main.js"></script>
+
+  </body>
+</html>
