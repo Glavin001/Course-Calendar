@@ -21,7 +21,7 @@ $(document).ready(function() {
         var $svg = $($target.attr('href')+' svg');
         var chart = $svg.data('chart');
         //console.log(e, $target, $svg, chart);
-        chart.update();
+        chart && chart.update();
     });
 
     //
@@ -59,14 +59,17 @@ $(document).ready(function() {
                 {
                     "$project": {
                         // Include
+                        "CRN": 1,
                         "title": 1,
                         "subject": 1,
                         "course": 1,
                         "faculty": 1,
-                        "start date": 1,
-                        "end date": 1,
+                        "start_date": 1,
+                        "end_date": 1,
                         "days": 1,
-                        
+                        "start_time": 1,
+                        "end_time": 1,
+
                         // Additional
                         "fullCourse": {
                             "$concat": [
@@ -78,6 +81,9 @@ $(document).ready(function() {
                                 ".",
                                 "$course.lab"
                             ]
+                        },
+                        "CRN_str": {
+                            "$substr": ["$CRN", 0, 5]
                         }
 
                     }
@@ -86,6 +92,12 @@ $(document).ready(function() {
                 {
                     "$match": {
                          "$or": [
+                            {
+                                "CRN_str": {
+                                    "$regex": "^"+search+".*",
+                                    "$options": '-i'
+                                }
+                            },
                             {
                                 "title": {
                                     "$regex": ".*"+search+".*",
@@ -277,48 +289,72 @@ $(document).ready(function() {
         {}
     );
 
-    name = "pawan";
     graphDiscreteBarChart(
         "#charts svg#stats2",
-        "Stats",
+        "Latest Classes",
         "courses",
         [
-            {
-                "$project": {
-                    "_id": "$faculty",
-                    "value": "$actual"
-                }
-            },
-            {
-                "$match": {
-                    "_id": {
-                        "$regex": ".*"+name+".*",
-                        "$options": '-i'
-                    }
-                }
-            },
-            { 
-                "$group": {
-                    "_id": "$_id",
-                    "count": {
-                        "$sum": "$value"
-                    }
-                } 
-            },
-            { 
-                "$project": {
-                    "_id": 0,
-                    "label": "$_id",
-                    "value": "$count"
-                }
-            },
-            {
-                "$limit": 100
-            },
-            {
+           {
                 "$sort": {
-                    "value": 1
+                    "start_time.hour": -1,
+                    "start_time.minute": -1
                 }
+            },
+            
+            {
+                "$project": {
+                    "label": {
+                        "$concat": [
+                            "$subject",
+                            " ",
+                            {
+                                "$substr": [
+                                    "$course.id",
+                                    0,
+                                    4
+                                ]
+                            },
+                            " - ",
+                            "$title"
+                        ]
+                    },
+                    "value": {
+                        
+                        "$add": [
+                            "$start_time.minute",
+                            {
+                                "$multiply": [
+                                    "$start_time.hour",
+                                    100
+                                ]
+                            }
+                        ]
+                        
+                        /*
+                        "$concat": [
+                            {
+                                "$substr": [
+                                    "$start_time.hour",
+                                    0,
+                                    2
+                                ]
+                            },
+                            ":",
+                            {
+                                "$substr": [
+                                    "$start_time.minute",
+                                    0,
+                                    2
+                                ]
+                            }
+                        ]
+                        */
+                    }
+                }
+            },
+            
+            {
+                "$limit": 10
             }
         ],
         {}

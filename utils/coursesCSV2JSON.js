@@ -139,7 +139,8 @@ csv()
         // 
         for (var j=0, jLen=header.length; j<jLen; j++) {
             var key = header[j];
-            d[key] = valueForField(key, row[j]);
+            var nKey = key.split(' ').join('_');
+            d[nKey] = valueForField(key, row[j]);
         }
         data.push(d);
     }

@@ -120,7 +120,7 @@ MongoClient.connect("mongodb://"+nconf.get('mongo:host')+":"+nconf.get('mongo:po
         var pipeline = query.pipeline || [];
         var options = query.options || {};
         collection.aggregate(pipeline, options, function(err, docs) {
-            console.log(err);
+            //console.log(err);
             return callback(docs);
         });
     });
