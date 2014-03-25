@@ -12,6 +12,9 @@
     <!-- NVD3 -->
     <link href="bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
 
+    <!-- Animate.css -->
+    <link href="bower_components/animate.css/animate.min.css" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -21,6 +24,7 @@
 
     <!-- Styles -->
     <style>
+        /* Graphs */
         #charts {
             height: 100%;
             overflow: visible;
@@ -28,6 +32,21 @@
         #charts svg {
             height: 500px;
         }
+
+        /* Search */
+        .search-container .is-loading {
+            display: block;
+        }
+        .search-container .done-loading {
+            display: none;
+        }
+        .search-container[data-pending="0"] .is-loading {
+            display: none;
+        }
+        .search-container[data-pending="0"] .done-loading {
+            display: block;
+        }
+
     </style>
 
   </head>
@@ -37,31 +56,69 @@
         
         <div class="jumbotron">
           <h1>Welcome to Course Calendar</h1>
-          <p>MongoDB + Node.js + Express + D3</p>
-          <p><a class="btn btn-primary btn-lg" role="button" href="https://github.com/SMU-CS-and-Math-Society/Course-Calendar" target="_blank">Learn more</a></p>
+          <p>
+            <a href="http://www.mongodb.org/" target="_blank">MongoDB</a> 
+            + <a href="http://nodejs.org/" target="_blank">Node.js</a>
+            + <a href="http://expressjs.com/" target="_blank">Express</a> 
+            + <a href="http://d3js.org/" target="_blank">D3.js</a>
+            </p>
+          <p><a class="btn btn-primary btn-lg" role="button" href="https://github.com/SMU-CS-and-Math-Society/Course-Calendar" target="_blank">Learn More on GitHub</a></p>
         </div>
         
 
+        <div class="container">
+            
+            <div class="input-group input-group-lg search-container" data-pending="0">
+              <span class="input-group-addon">Search</span>
+              <input type="text" id="course-search" class="form-control" placeholder="for professor, subject, course, CRN and more.">
+              <span class="input-group-addon">
+                <span class="done-loading">Hit Enter!</span>
+                <span class="is-loading">Loading...</span>
+              </span>
+            </div>
+            <br/>
+            <div class="well">
+            <script id="entry-template" type="text/x-handlebars-template">
+                {{#each this}}
+                <div class="panel panel-primary animated fadeInUpBig">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">{{subject}} {{course.id}}.{{course.lab}} - {{title}} with {{faculty}}</h3>
+                  </div>
+                  <div class="panel-body">
+                    {{faculty}}
+                    <pre>{{json-pretty this}}</pre>
+                  </div>
+                </div>
+                {{/each}}
+            </script>
+            <div id="output"></div>
+
+        </div>
+
+        <br/>
+        <hr/>
+        <br/>
+
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
-          <li><a href="#profile" data-toggle="tab">Profile</a></li>
-          <li><a href="#messages" data-toggle="tab">Messages</a></li>
-          <li><a href="#settings" data-toggle="tab">Settings</a></li>
+          <li class="active"><a href="#graph1" data-toggle="tab">Popular Subjects</a></li>
+          <li><a href="#graph2" data-toggle="tab">Pawan Lingras!</a></li>
+          <li><a href="#graph3" data-toggle="tab">CS Prof. w/ Most Students</a></li>
+          <li><a href="#graph4" data-toggle="tab">Prof. w/ Most Students</a></li>
         </ul>
 
         <!-- Tab panes -->
         <div id="charts" class="tab-content">
-          <div class="tab-pane active fade in" id="home">
+          <div class="tab-pane active fade in" id="graph1">
               <svg id="stats1" class=""></svg>
           </div>
-          <div class="tab-pane fade" id="profile">
+          <div class="tab-pane fade" id="graph2">
               <svg id="stats2" class=""></svg>
           </div>
-          <div class="tab-pane fade" id="messages">
+          <div class="tab-pane fade" id="graph3">
               <svg id="stats3" class=""></svg>
           </div>
-          <div class="tab-pane fade" id="settings">
+          <div class="tab-pane fade" id="graph4">
               <svg id="stats4" class=""></svg>
           </div>
         </div>
@@ -72,11 +129,12 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    <!-- Custom JavaScripts -->
     <script src="bower_components/d3/d3.min.js"></script>
     <script src="bower_components/nvd3/nv.d3.min.js"></script>
-    <script src="main.js"></script>
+    
+    <!-- Custom JavaScripts -->
+    <script src="js/handlebars-v1.3.0.js"></script>
+    <script src="js/main.js"></script>
 
   </body>
 </html>

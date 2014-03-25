@@ -3,16 +3,6 @@ $(document).ready(function() {
     // Ready!
     console.log('READY!');
 
-    // Update on tab change
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var $target = $(e.target);
-        var $svg = $($target.attr('href')+' svg');
-        var chart = $svg.data('chart');
-        //console.log(e, $target, $svg, chart);
-        chart.update();
-    });
-
-
     var aggregate = function(collection, pipeline, options, callback) {
         $.get(
             "/api/v1/"+collection+"/aggregate",
@@ -24,6 +14,137 @@ $(document).ready(function() {
             return callback && callback(results);
         });
     };
+
+    // Update on tab change
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var $target = $(e.target);
+        var $svg = $($target.attr('href')+' svg');
+        var chart = $svg.data('chart');
+        //console.log(e, $target, $svg, chart);
+        chart.update();
+    });
+
+    //
+    Handlebars.registerHelper('json', function(context) {
+        return JSON.stringify(context);
+    });
+    Handlebars.registerHelper('json-pretty', function(context) {
+        return JSON.stringify(context, undefined, 4);
+    });
+    
+    var render = function(templateSelector, outputSelector, context) {
+        var $template = $(templateSelector);
+        var source   = $template.html();
+        var template = Handlebars.compile(source);
+        
+        //var context = {title: "My New Post", body: "This is my first post!"}
+        var html    = template(context);
+        $(outputSelector).html(html);
+
+    };
+
+    var $search = $('#course-search');
+    var $searchContainer = $('.search-container');
+
+    function processSearch() {
+        var search = $search.val();
+        //console.log(search);
+        var old = parseInt( $searchContainer.attr('data-pending') );
+        $searchContainer.attr('data-pending', ++old);
+
+        aggregate(
+            "courses",
+            [
+                
+                {
+                    "$project": {
+                        // Include
+                        "title": 1,
+                        "subject": 1,
+                        "course": 1,
+                        "faculty": 1,
+                        "start date": 1,
+                        "end date": 1,
+                        "days": 1,
+                        
+                        // Additional
+                        "fullCourse": {
+                            "$concat": [
+                                "$subject",
+                                " ",
+                                {
+                                    "$substr": [ "$course.id", 0, 4 ]
+                                },
+                                ".",
+                                "$course.lab"
+                            ]
+                        }
+
+                    }
+                },
+                
+                {
+                    "$match": {
+                         "$or": [
+                            {
+                                "title": {
+                                    "$regex": ".*"+search+".*",
+                                    "$options": '-i'
+                                }
+                            },
+                            {
+                                "subject": {
+                                    "$regex": "^"+search+".*",
+                                    "$options": '-i'
+                                }
+                            },
+                            {
+                                "course.id": {
+                                    "$regex": "^"+search+".*",
+                                    "$options": '-i'
+                                }
+                            },
+                            {
+                                "faculty": {
+                                    "$regex": ".*"+search+".*",
+                                    "$options": '-i'
+                                }
+                            },
+                            {
+                                "fullCourse": {
+                                    "$regex": "^"+search+".*",
+                                    "$options": '-i'
+                                }
+                            }
+                            
+                        ]
+                    }
+                },
+                { "$limit": 10 },
+                { "$sort": { "actual": -1, "max seating": -1 }}
+                
+            ],
+            {},
+            function(data) {
+                render("#entry-template", "#output", data);
+                var old = parseInt( $searchContainer.attr('data-pending') );
+                if (--old <= 0) {
+                    $searchContainer.attr('data-pending', 0);
+                }
+                else {
+                    $searchContainer.attr('data-pending', --old);
+                }
+        });
+    };
+
+    var changeTimer;
+    //$search.change(function() {
+    $search.on('keydown', function() {
+        clearTimeout(changeTimer);
+        changeTimer = setTimeout(processSearch, 1000);
+    });
+    processSearch();
+
 
     var graphDiscreteBarChart = function(selector, title, collection, pipeline, options) {
 
