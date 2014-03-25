@@ -5,16 +5,17 @@ Course-Calendar
 
 -----
 
-## Easy-Setup (and for Updating)
+## Easy-Setup (and for updating)
 
 Copy and paste the below to install the app, load the database, and start the app:
 
 ```bash
-# Install
+# Install dependencies
 npm install
 bower install
-# Database
+# Convert data
 node utils/coursesCSV2JSON.js -i data/courses.csv -o data/output.json
+# Drop 'smu' and import
 mongo smu --eval "db.dropDatabase()"
 mongoimport --db smu -c courses --jsonArray < data/output.json
 # Start app
@@ -27,17 +28,26 @@ See below for explaination.
 
 ## Installation
 
-After cloning this repository:
+After cloning this repository, install the package dependencies:
 
 ```bash
 npm install
 bower install
 ```
 
-### Import the course data
+### Setting up the database
 
+Convert the CSV data to JSON format using utils/coursesCSV2JSON.js
 ```bash
-mongoimport --db smu -c courses data/coursesExport.json
+node utils/coursesCSV2JSON.js -i data/courses.csv -o data/output.json
+```
+Import newly formated data to MongoDB.  
+__WARNING:__ this will drop any existing `smu` database!
+```bash
+# Drop 'smu'
+mongo smu --eval "db.dropDatabase()"
+# Import data to 'courses' collection in 'smu' database
+mongoimport --db smu --collection courses --jsonArray < data/output.json
 ```
 
 If successful, the console will display:
@@ -46,22 +56,25 @@ If successful, the console will display:
 
 ## Usage
 
+#### Start the app
+
 ```bash
 node index.js
 ```
+Browse to http://localhost:8080/
 
 ## Utilities
 
-### Course CSV to JSON
+#### Course CSV to JSON
 
 ```bash
-node utils/coursesCSV2JSON.js -i data/courses.csv -o data/output.json --pretty
+node utils/coursesCSV2JSON.js -i data/courses.csv -o data/output.json
 ```
 
 #### Importing from JSON output file
 
 ```bash
-mongoimport --db smu -c courses --jsonArray < data/output.json
+mongoimport --db smu --collection courses --jsonArray < data/output.json --pretty
 ```
-
- > Note: Be sure to clear your collection `courses` in database `smu` before importing, as this will insert duplicates.
+Adding `--pretty` produces human readable JSON.  
+Be sure to clear your collection `courses` in database `smu` before importing, as this will insert duplicates.
